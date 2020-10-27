@@ -11,7 +11,7 @@ public class CardImageConstants {
     /**
      * Card regex pattern expressions
      */
-    public static final Pattern CARD_SPACE_PATTERN = Pattern.compile("B{8,12}");
+    public static final Pattern CARD_SPACE_PATTERN = Pattern.compile("B{7,12}");
     public static final Pattern CARD_SPACE_FACED_PATTERN = Pattern.compile("B*(?<=W{55,65})?" + CARD_SPACE_PATTERN + "?(?=W{55,65})?B*");
 //    public static final Pattern CARD_SPACE_FACED_PATTERN = Pattern.compile("(?<=W{60,65})?" + CARD_SPACE_PATTERN + "(?=W{60,65})?");
 
