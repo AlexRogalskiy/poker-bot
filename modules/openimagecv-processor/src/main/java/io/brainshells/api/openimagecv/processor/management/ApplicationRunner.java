@@ -101,7 +101,7 @@ public class ApplicationRunner {
         Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
             .forEach(file -> {
                 final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
-                final CardPattern[] pattern = cardImageProcessor.getCardPattern(CARD_RANK_START_RANGE.getStartPoint(), CARD_RANK_START_RANGE.getEndPoint());
+                final CardPattern[] pattern = cardImageProcessor.getCardPattern(CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getStartPoint(), CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getEndPoint());
                 log.info("{} - {}", file.getName(), this.compress(CardPattern.serialize(pattern)));
             });
 //        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
