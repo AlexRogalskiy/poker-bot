@@ -1,0 +1,8 @@
+io/brainshells/api/image/YouTube.java
+ io.brainshells.api.image.YouTube
+io/brainshells/api/image/HelloCv.java
+ io.brainshells.api.image.HelloCv
+io/brainshells/api/image/Webcam.java
+ io.brainshells.api.image.Webcam
+io/brainshells/api/image/AgeNet.java
+ io.brainshells.api.image.AgeNet
