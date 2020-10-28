@@ -106,6 +106,7 @@
         <enforce.maven.skip>false</enforce.maven.skip>
         <enforce.plugin.skip>false</enforce.plugin.skip>
         <package-tests.skip>true</package-tests.skip>
+        <copy-dependencies.skip>false</copy-dependencies.skip>
 
         <failIfNoTests>false</failIfNoTests>
         <skipTests>false</skipTests>
@@ -115,12 +116,15 @@
         <lombok.version>1.18.16</lombok.version>
 
         <maven-plugin-os.version>1.6.2</maven-plugin-os.version>
+        <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
         <maven-build-helper-plugin.version>3.2.0</maven-build-helper-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
         <maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
@@ -177,6 +181,61 @@
         </extensions>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>clean-generated-sources</id>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <configuration>
+                    <excludeArtifactIds>spring-boot-devtools</excludeArtifactIds>
+                    <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+                    <includeScope>runtime</includeScope>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>false</overWriteSnapshots>
+                    <overWriteIfNewer>true</overWriteIfNewer>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>false</failOnWarning>
+                            <ignoreNonCompile>true</ignoreNonCompile>
+                            <outputXML>true</outputXML>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${copy-dependencies.skip}</skip>
+                        </configuration>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -441,6 +500,38 @@
     </pluginRepositories>
 
     <profiles>
+        <!-- Assembly profile -->
+        <profile>
+            <id>assembly</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>${maven-assembly-plugin.version}</version>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <appendAssemblyId>true</appendAssemblyId>
+                            <tarLongFileMode>posix</tarLongFileMode>
+                            <finalName>${project.groupId}-${project.artifactId}-${project.version}</finalName>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>package</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <!-- Javadoc profile -->
         <profile>
             <id>javadoc</id>
@@ -663,6 +754,7 @@
                 <enforce.java.skip>true</enforce.java.skip>
                 <enforce.maven.skip>true</enforce.maven.skip>
                 <enforce.plugin.skip>true</enforce.plugin.skip>
+                <copy-dependencies.skip>true</copy-dependencies.skip>
                 <logback.loglevel>DEBUG</logback.loglevel>
             </properties>
         </profile>

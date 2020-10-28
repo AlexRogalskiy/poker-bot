@@ -31,7 +31,7 @@ public class ApplicationRunner {
     /**
      * Application executor
      */
-    public static final ScheduledThreadPoolExecutor EXECUTOR = newScheduledExecutor(10, "openimagecv");
+    public static final ScheduledThreadPoolExecutor EXECUTOR = newScheduledExecutor(10, "openimagecv-thread");
 
     /**
      * Image directory

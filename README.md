@@ -12,14 +12,21 @@ Application can be used for parsing card images with possibility to recognize ca
 
 ### For JDK 8
 
-```text
-mvn clean install -Pdev,non_module_java -DskipTests
+```shell script
+mvn clean install -Pdev,assembly,non_module_java -DskipTests
 ```
 
 ### For JDK 11
 
-```text
-mvn clean install -Pdev,module_java -DskipTests
+```shell script
+mvn clean install -Pdev,assembly,module_java -DskipTests
+```
+## Running
+
+Execute the following command to start OpenServiceCV processor:
+
+```shell script
+run.bat <source_image_director>
 ```
 
 ## Usage
