@@ -77,6 +77,7 @@
     </distributionManagement>
 
     <modules>
+        <module>modules/openimagecv-all</module>
         <module>modules/openimagecv-commons</module>
         <module>modules/openimagecv-processor</module>
     </modules>
@@ -303,7 +304,7 @@
                             <customClasspathLayout>${project.artifactId}.${project.version}</customClasspathLayout>
                         </manifest>
                         <manifestEntries>
-                            <Automatic-Module-Name>${project.groupId}-${project.build.finalName}</Automatic-Module-Name>
+                            <Automatic-Module-Name>${automatic-module-name}</Automatic-Module-Name>
                             <Contains-Sources>java,class</Contains-Sources>
                             <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
                             <Implementation-Title>${project.description}</Implementation-Title>

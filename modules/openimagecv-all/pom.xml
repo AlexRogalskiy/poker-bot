@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.brainshells.api</groupId>
+        <artifactId>openimagecv-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../</relativePath>
+    </parent>
+
+    <name>io.brainshells.api.openimagecv.all</name>
+    <description>OpenImageCV All Bundle</description>
+    <artifactId>openimagecv-all</artifactId>
+    <packaging>jar</packaging>
+    <url>https://github.com/AlexRogalskiy/openimagecv/tree/master/modules/openimagecv-all</url>
+    <inceptionYear>2020</inceptionYear>
+
+    <properties>
+        <io.brainshells.commons.version>0.1.0-SNAPSHOT</io.brainshells.commons.version>
+    </properties>
+
+    <dependencies>
+        <!-- BrainShells library dependencies -->
+        <dependency>
+            <groupId>io.brainshells.api</groupId>
+            <artifactId>openimagecv-commons</artifactId>
+            <version>${io.brainshells.commons.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.brainshells.api</groupId>
+            <artifactId>openimagecv-processor</artifactId>
+            <version>${io.brainshells.commons.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

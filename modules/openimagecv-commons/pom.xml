@@ -17,10 +17,6 @@
     <url>https://github.com/AlexRogalskiy/openimagecv/tree/master/modules/openimagecv-commons</url>
     <inceptionYear>2020</inceptionYear>
 
-    <properties>
-        <sensiblemetrics.version>0.1.0-SNAPSHOT</sensiblemetrics.version>
-    </properties>
-
     <build>
         <defaultGoal>clean package</defaultGoal>
         <finalName>${project.groupId}-${project.artifactId}-${project.version}</finalName>
