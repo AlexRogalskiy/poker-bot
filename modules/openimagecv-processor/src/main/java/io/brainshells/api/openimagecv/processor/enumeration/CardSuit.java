@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Getter
-public enum CardSuit implements Maskable<List<Pattern>> {
+public enum CardSuit implements Maskable {
     CLUB("c",
         "^B*W{94,100}B{1,7}W{20,26}B{3,9}W{19,25}B{3,9}W{19,25}B{3,9}W{19,25}B{3,9}W{19,25}B{2,8}WBW{15,21}B{9,15}W{13,19}B{9,15}W{13,19}B{10,16}W{12,18}B{9,15}W{13,19}B{9,15}W{14,20}B{0,6}W{1,7}B{0,6}W{19,25}B{2,5}W{22,28}B{1,7}W{8,14}B*$",
         "^B*W{93,99}B{1,7}W{20,26}B{2,8}W{20,26}B{3,9}W{19,25}B{3,9}W{19,25}B{2,8}W{20,26}B{2,8}WBW{15,21}B{8,14}W{14,20}B{9,15}W{12,18}B{10,16}W{12,18}B{10,16}W{13,19}B{9,15}W{14,20}B{0,6}WBW{2,5}B{0,6}W{19,25}B{2,5}W{22,28}B{1,7}W{9,15}B*$",
@@ -86,7 +86,7 @@ public enum CardSuit implements Maskable<List<Pattern>> {
      */
     CardSuit(final String value, final String... patterns) {
         this.value = value;
-        this.patterns = Maskable.toPatternMask(patterns);
+        this.patterns = Maskable.toPatterns(patterns);
     }
 
     /**

@@ -89,8 +89,8 @@ public class BufferedCardImageAdaptor implements CardImageProcessor {
             .collect(Collectors.toList());
     }
 
-    protected <E extends Enum<E> & Maskable<List<Pattern>>> Optional<E> getByPattern(final EnumSet<E> patternSet,
-                                                                                     final String pattern) {
+    protected <E extends Enum<E> & Maskable> Optional<E> getByPattern(final EnumSet<E> patternSet,
+                                                                      final String pattern) {
         return patternSet.stream().max(Comparator.comparingLong(p -> countMatches(p.getMask(), pattern)));
     }
 
