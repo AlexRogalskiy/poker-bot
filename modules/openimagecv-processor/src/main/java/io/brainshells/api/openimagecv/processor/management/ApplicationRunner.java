@@ -2,7 +2,6 @@ package io.brainshells.api.openimagecv.processor.management;
 
 import io.brainshells.api.openimagecv.processor.model.Card;
 import io.brainshells.api.openimagecv.processor.model.Deck;
-import io.brainshells.api.openimagecv.processor.processor.BufferedCardImageAdaptor;
 import io.brainshells.api.openimagecv.processor.utils.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,67 +65,12 @@ public class ApplicationRunner {
 
         Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
             .map(this.createDeck())
-            .map(this.createDeckTask())
+            .map(this.createDeckPrinterTask())
             .map(r -> CompletableFuture.runAsync(r, EXECUTOR))
             .map(f -> f.whenCompleteAsync(DEFAULT_COMPLETABLE_LOG_ACTION))
             .forEach(CompletableFuture::join);
 
         EXECUTOR.shutdownNow();
-    }
-
-    public void reinit2() {
-        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
-            .forEach(file -> {
-                final BufferedCardImageAdaptor cardImageProcessor = new BufferedCardImageAdaptor(ImageUtils.loadImage(file));
-                final int count = cardImageProcessor.getCardsAmount(CARD_RANK_RANGE.getStartPoint(), CARD_RANK_RANGE.getEndPoint());
-                log.info("Count: {}", count);
-            });
-    }
-
-    public String compress(final String str) {
-        String input = str;
-
-        int count = 1;
-
-        char last = input.charAt(0);
-
-        StringBuilder output = new StringBuilder();
-
-        for (int i = 1; i < input.length(); i++) {
-            if (input.charAt(i) == last) {
-                count++;
-            } else {
-                if (count > 1) {
-                    output.append(last + "{" + (count - 3) + "," + (count + 3) + "}");
-                } else {
-                    output.append(last);
-                }
-                count = 1;
-                last = input.charAt(i);
-            }
-        }
-        if (count > 1) {
-            output.append(last + "{" + (count - 3) + "," + (count + 3) + "}");
-        } else {
-            output.append(last);
-        }
-        return "^B*" + output.toString() + "B*$";
-    }
-
-    public void reinit() {
-//        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
-//            .forEach(file -> {
-//                final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
-//                final CardPattern[] pattern = cardImageProcessor.getCardPattern(CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getStartPoint(), CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getEndPoint());
-//                log.info("{} - {}", file.getName(), this.compress(CardPattern.serialize(pattern)));
-//            });
-//        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
-//            .forEach(file -> {
-//                final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
-//                log.info(">>> {}", cardImageProcessor.getCardRank(CARD_RANK_START_RANGE.expand(CARD_EXPAND_RANGE).getStartPoint(), CARD_RANK_START_RANGE.expand(CARD_EXPAND_RANGE).getEndPoint()));
-//                final CardPattern[] pattern = cardImageProcessor.getCardPattern(CARD_RANK_RANGE.getStartPoint(), CARD_RANK_RANGE.getEndPoint());
-//                log.info(CardPattern.serialize(pattern));
-//            });
     }
 
     /**
@@ -135,7 +79,7 @@ public class ApplicationRunner {
      *
      * @return operator to process file
      */
-    private Function<Deck, Runnable> createDeckTask() {
+    private Function<Deck, Runnable> createDeckPrinterTask() {
         return deck -> () -> {
             final String deckCards = deck.getCards(CARD_RANK_RANGE, CARD_RANK_START_RANGE, CARD_SUIT_START_RANGE)
                 .stream()
