@@ -2,11 +2,11 @@
 
 ## Summary
 
-OpenServiceCV application is intended to provide operations on poker card images \(card suit/rank recognition by template\)
+OpenImageCV application is intended to provide operations on poker card images \(card's rank/suit recognition by template\)
 
 ## Description
 
-Application can be used for parsing card images with possibility to recognize card rank/suit predefined set of templates
+Application can be used for parsing card images with possibility to recognize card's rank/suit by predefined set of templates
 
 ## Compile
 
@@ -64,7 +64,8 @@ OpenImageCV module dependencies:
 
 ## Authors
 
-WS-Documents is maintained by:
+OpenImageCV is maintained by:
+
 * [Alexander Rogalskiy](https://github.com/AlexRogalskiy) 
 
 with community support please contact with us if you have some question or proposition.
