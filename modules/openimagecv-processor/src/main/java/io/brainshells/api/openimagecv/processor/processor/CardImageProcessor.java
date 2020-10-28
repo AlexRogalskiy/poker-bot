@@ -4,9 +4,10 @@ import io.brainshells.api.openimagecv.processor.enumeration.CardRank;
 import io.brainshells.api.openimagecv.processor.enumeration.CardSuit;
 import io.brainshells.api.openimagecv.processor.model.Point;
 
+import java.io.Serializable;
 import java.util.Optional;
 
-public interface CardImageProcessor {
+public interface CardImageProcessor extends Serializable {
     /**
      * Returns optional {@link CardSuit} by input {@link Point} parameters
      *

@@ -2,6 +2,7 @@ package io.brainshells.api.openimagecv.processor.utils;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 
@@ -37,9 +38,7 @@ public class ValidationUtils {
      * @param minBound - initial input {@code int} minimum bound
      * @param maxBound - initial input {@code int} maximum bound
      */
-    public static void checkRange(final int value,
-                                  final int minBound,
-                                  final int maxBound) {
+    public static void checkRange(final int value, final int minBound, final int maxBound) {
         final boolean flag = checkRange(minBound, maxBound, true, true).test(value);
         checkTrue(flag, format("Point: {%d} should be in range: {%d}-{%d}", value, minBound, maxBound));
     }
@@ -51,9 +50,21 @@ public class ValidationUtils {
      * @param errorMessage - initial input message {@link String}
      * @throws IllegalArgumentException if {@code value} is {@code false}
      */
-    public static void checkTrue(final boolean value,
-                                 final String errorMessage) {
+    public static void checkTrue(final boolean value, final String errorMessage) {
         if (!value) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    /**
+     * Validates that the value is not null
+     *
+     * @param value        - initial input value to check
+     * @param errorMessage - initial input message {@link String}
+     * @throws IllegalArgumentException if {@code value} is {@code null}
+     */
+    public static void checkNotNull(final Object value, final String errorMessage) {
+        if (Objects.isNull(value)) {
             throw new IllegalArgumentException(errorMessage);
         }
     }

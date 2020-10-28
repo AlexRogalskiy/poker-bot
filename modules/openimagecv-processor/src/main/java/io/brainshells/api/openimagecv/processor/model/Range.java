@@ -39,8 +39,8 @@ public class Range<T extends Point> {
      * @param range initial input {@link Range} to update by
      * @return updated range
      */
-    public Range<Point> expand(final Range<T> range) {
-        return this.expand(range, 1);
+    public Range<Point> adjust(final Range<T> range) {
+        return this.adjust(range, 1);
     }
 
     /**
@@ -50,7 +50,7 @@ public class Range<T extends Point> {
      * @param times initial input {@code int} multiplier to update by
      * @return updated range
      */
-    public Range<Point> expand(final Range<T> range, int times) {
+    public Range<Point> adjust(final Range<T> range, int times) {
         return Range.of(
             Point.of(this.startPoint.getXCoord() + times * range.width(), this.startPoint.getYCoord() + times * range.height()),
             Point.of(this.endPoint.getXCoord() + times * range.width(), this.endPoint.getYCoord() + times * range.height())

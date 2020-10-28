@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 import java.util.regex.Pattern;
 
 @UtilityClass
-public class CardImageConstants {
+public class CardConstants {
     /**
      * Card regex pattern expressions
      */

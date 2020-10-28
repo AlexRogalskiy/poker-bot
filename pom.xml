@@ -33,7 +33,7 @@
             <name>Alexander Rogalskiy</name>
             <email>alexander.rogalskiy@yandex.ru</email>
             <url>http://github.com/AlexRogalskiy</url>
-            <organization>SensibleMetrics, Inc.</organization>
+            <organization>BrainShells, Inc.</organization>
             <organizationUrl>https://brainshells.io/</organizationUrl>
             <roles>
                 <role>developer</role>
@@ -104,13 +104,14 @@
         <enforce.java.skip>false</enforce.java.skip>
         <enforce.maven.skip>false</enforce.maven.skip>
         <enforce.plugin.skip>false</enforce.plugin.skip>
+        <package-tests.skip>true</package-tests.skip>
 
         <failIfNoTests>false</failIfNoTests>
         <skipTests>false</skipTests>
 
         <logback.version>1.2.3</logback.version>
         <logback-contrib.version>0.1.5</logback-contrib.version>
-        <lombok.version>edge-SNAPSHOT</lombok.version>
+        <lombok.version>1.18.16</lombok.version>
 
         <maven-plugin-os.version>1.6.2</maven-plugin-os.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
@@ -302,7 +303,7 @@
                             <customClasspathLayout>${project.artifactId}.${project.version}</customClasspathLayout>
                         </manifest>
                         <manifestEntries>
-                            <Automatic-Module-Name>${automatic-module-name}</Automatic-Module-Name>
+                            <Automatic-Module-Name>${project.groupId}-${project.build.finalName}</Automatic-Module-Name>
                             <Contains-Sources>java,class</Contains-Sources>
                             <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
                             <Implementation-Title>${project.description}</Implementation-Title>
@@ -415,22 +416,6 @@
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-            <id>projectlombok.org</id>
-            <name>ProjectLombok repo</name>
-            <url>https://projectlombok.org/edge-releases</url>
             <layout>default</layout>
         </repository>
     </repositories>

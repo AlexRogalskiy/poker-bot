@@ -2,10 +2,9 @@ package io.brainshells.api.openimagecv.processor.enumeration;
 
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Getter
 public enum CardSuit implements Maskable<List<Pattern>> {
@@ -66,6 +65,11 @@ public enum CardSuit implements Maskable<List<Pattern>> {
     );
 
     /**
+     * Collection of {@link CardSuit} values
+     */
+    public static final EnumSet<CardSuit> VALUES = EnumSet.allOf(CardSuit.class);
+
+    /**
      * Card suit
      */
     private final String value;
@@ -82,7 +86,7 @@ public enum CardSuit implements Maskable<List<Pattern>> {
      */
     CardSuit(final String value, final String... patterns) {
         this.value = value;
-        this.patterns = Arrays.stream(patterns).map(Pattern::compile).collect(Collectors.toList());
+        this.patterns = Maskable.toPatternMask(patterns);
     }
 
     /**

@@ -4,7 +4,6 @@ import io.brainshells.api.openimagecv.processor.management.CardManager;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static io.brainshells.api.openimagecv.processor.management.CardImageConstants.CARD_EXPAND_RANGE;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_EXPAND_RANGE;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -27,13 +26,11 @@ public class Deck extends AbstractDeck {
     /**
      * Default deck constructor by input {@link BufferedImage} and {@link CardManager}
      *
-     * @param image       initial input {@link BufferedImage}
+     * @param name        initial input {@link String} deck
      * @param cardManager initial input {@link CardManager}
      */
-    public Deck(final String name,
-                final BufferedImage image,
-                final CardManager cardManager) {
-        super(name, image, cardManager);
+    public Deck(final String name, final CardManager cardManager) {
+        super(name, cardManager);
     }
 
     /**
@@ -46,8 +43,8 @@ public class Deck extends AbstractDeck {
                                final Range<Point> suitMask) {
         return IntStream.range(0, this.getCardManager().getCardsAmount(range))
             .mapToObj(n -> this.getCardManager().getCardAt(
-                rankMask.expand(CARD_EXPAND_RANGE, n),
-                suitMask.expand(CARD_EXPAND_RANGE, n)
+                rankMask.adjust(CARD_EXPAND_RANGE, n),
+                suitMask.adjust(CARD_EXPAND_RANGE, n)
             ))
             .collect(Collectors.toList());
     }
@@ -61,9 +58,9 @@ public class Deck extends AbstractDeck {
      */
     private void readObject(final ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         inputStream.defaultReadObject();
-        final BufferedImage image = ImageIO.read(inputStream);
+        final String name = inputStream.readUTF();
         final CardManager cardManager = (CardManager) inputStream.readObject();
-        this.initialize(image, cardManager);
+        this.initialize(name, cardManager);
     }
 
     /**
@@ -74,7 +71,7 @@ public class Deck extends AbstractDeck {
      */
     private void writeObject(final ObjectOutputStream outputStream) throws IOException {
         outputStream.defaultWriteObject();
-        ImageIO.write(this.getImage(), "png", outputStream);
+        outputStream.writeObject(this.getName());
         outputStream.writeObject(this.getCardManager());
     }
 }

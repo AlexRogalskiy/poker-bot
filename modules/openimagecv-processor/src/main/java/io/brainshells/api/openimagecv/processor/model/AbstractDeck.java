@@ -3,7 +3,6 @@ package io.brainshells.api.openimagecv.processor.model;
 import io.brainshells.api.openimagecv.processor.management.CardManager;
 import lombok.Getter;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -12,17 +11,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class AbstractDeck implements Serializable {
 
     /**
-     * Deck image
+     * Deck name
      */
-    private BufferedImage image;
+    private String name;
     /**
      * Deck card manager
      */
     private CardManager cardManager;
-    /**
-     * Deck name
-     */
-    private String name;
 
     /**
      * Deck initialization status
@@ -37,51 +32,34 @@ public abstract class AbstractDeck implements Serializable {
     /**
      * Creates new deck instance by input parameters
      *
-     * @param image       initial input {@link BufferedImage}
      * @param cardManager initial input {@link CardManager}
      */
-    public AbstractDeck(final BufferedImage image,
-                        final CardManager cardManager) {
-        this(UUID.randomUUID().toString(), image, cardManager);
+    public AbstractDeck(final CardManager cardManager) {
+        this(UUID.randomUUID().toString(), cardManager);
     }
 
     /**
      * Creates new deck instance by input parameters
      *
-     * @param image       initial input {@link BufferedImage}
+     * @param name        initial input {@link String} deck name
      * @param cardManager initial input {@link CardManager}
      */
-    public AbstractDeck(final String name,
-                        final BufferedImage image,
-                        final CardManager cardManager) {
-        this.name = name;
-        this.initialize(image, cardManager);
+    public AbstractDeck(final String name, final CardManager cardManager) {
+        this.initialize(name, cardManager);
     }
 
     /**
      * Initialized deck by input parameters
      *
-     * @param image       initial input {@link BufferedImage}
      * @param cardManager initial input {@link CardManager}
      */
-    protected final void initialize(final BufferedImage image,
-                                    final CardManager cardManager) {
+    protected final void initialize(final String name, final CardManager cardManager) {
         if (!this.init.compareAndSet(State.NEW, State.INITIALIZING)) {
             throw new IllegalStateException("Deck has already been initialized");
         }
-        this.image = image;
+        this.name = name;
         this.cardManager = cardManager;
         init.set(State.INITIALIZED);
-    }
-
-    /**
-     * Returns deck {@link BufferedImage}
-     *
-     * @return deck image
-     */
-    protected final BufferedImage getImage() {
-        this.checkInit();
-        return this.image;
     }
 
     /**

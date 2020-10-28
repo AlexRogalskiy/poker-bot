@@ -1,17 +1,28 @@
 package io.brainshells.api.openimagecv.processor.model;
 
 import lombok.Getter;
-import lombok.Value;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Value(staticConstructor = "of")
+@RequiredArgsConstructor
 public class Point {
     /**
      * X-axis coordinate
      */
-    int xCoord;
+    private final int xCoord;
     /**
      * Y-axis coordinate
      */
-    int yCoord;
+    private final int yCoord;
+
+    /**
+     * Returns new {@link Point} by input coordinates
+     *
+     * @param xCoord initial input {@code int} x-coordinate
+     * @param yCoord initial input {@code int} y-coordinate
+     * @return new point
+     */
+    public static Point of(final int xCoord, final int yCoord) {
+        return new Point(xCoord, yCoord);
+    }
 }

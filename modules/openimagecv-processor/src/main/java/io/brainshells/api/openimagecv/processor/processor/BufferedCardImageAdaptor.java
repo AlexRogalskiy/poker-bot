@@ -4,50 +4,66 @@ import io.brainshells.api.openimagecv.processor.enumeration.CardPattern;
 import io.brainshells.api.openimagecv.processor.enumeration.CardRank;
 import io.brainshells.api.openimagecv.processor.enumeration.CardSuit;
 import io.brainshells.api.openimagecv.processor.enumeration.Maskable;
+import io.brainshells.api.openimagecv.processor.model.CardBufferedImage;
 import io.brainshells.api.openimagecv.processor.model.Point;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static io.brainshells.api.openimagecv.processor.management.CardImageConstants.CARD_SPACE_FACED_PATTERN;
-import static io.brainshells.api.openimagecv.processor.utils.ValidationUtils.checkRange;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_SPACE_FACED_PATTERN;
 
-@Slf4j
-@RequiredArgsConstructor
-public class CardImageProcessorImpl implements CardImageProcessor {
+/**
+ * Card image processor implementation that operates on provided {@link BufferedImage}
+ * instance with corresponding bounds validation
+ */
+public class BufferedCardImageAdaptor implements CardImageProcessor {
 
-    private final BufferedImage image;
+    /**
+     * Default explicit serialVersionUID for interoperability
+     */
+    private static final long serialVersionUID = -3132324057456043186L;
+
+    /**
+     * Card {@link BufferedImage} wrapper
+     */
+    private final CardBufferedImage image;
+
+    /**
+     * Buffered card image constructor
+     *
+     * @param image initial input {@link BufferedImage} instance
+     */
+    public BufferedCardImageAdaptor(final BufferedImage image) {
+        this.image = new CardBufferedImage(image);
+    }
 
     @Override
     public Optional<CardSuit> getCardSuit(final Point startPoint,
                                           final Point endPoint) {
-        validatePoints(startPoint, endPoint).accept(this.image);
+        this.image.validatePoints(startPoint, endPoint);
 
         final CardPattern[] pattern = this.getCardPattern(startPoint, endPoint);
-        return this.getByPattern(EnumSet.allOf(CardSuit.class), CardPattern.serialize(pattern));
+        return this.getByPattern(CardSuit.VALUES, CardPattern.serialize(pattern));
     }
 
     @Override
     public Optional<CardRank> getCardRank(final Point startPoint,
                                           final Point endPoint) {
-        validatePoints(startPoint, endPoint).accept(this.image);
+        this.image.validatePoints(startPoint, endPoint);
 
         final CardPattern[] pattern = this.getCardPattern(startPoint, endPoint);
-        return this.getByPattern(EnumSet.allOf(CardRank.class), CardPattern.serialize(pattern));
+        return this.getByPattern(CardRank.VALUES, CardPattern.serialize(pattern));
     }
 
     @Override
     public int getCardsAmount(final Point startPoint,
                               final Point endPoint) {
-        validatePoints(startPoint, endPoint).accept(this.image);
+        this.image.validatePoints(startPoint, endPoint);
 
-        return this.getCardPatternList(startPoint, endPoint)
+        return this.getCardPatterns(startPoint, endPoint)
             .stream()
             .findFirst()
             .map(CardPattern::serialize)
@@ -56,38 +72,30 @@ public class CardImageProcessorImpl implements CardImageProcessor {
             .orElse(0);
     }
 
-    public CardPattern[] getCardPattern(final Point startPoint,
+    protected CardPattern[] getCardPattern(final Point startPoint,
                                            final Point endPoint) {
-        return this.getCardPatternList(startPoint, endPoint)
+        return this.getCardPatterns(startPoint, endPoint)
             .stream()
             .flatMap(Arrays::stream)
             .toArray(CardPattern[]::new);
     }
 
-    protected List<CardPattern[]> getCardPatternList(final Point startPoint,
-                                                     final Point endPoint) {
+    protected List<CardPattern[]> getCardPatterns(final Point startPoint,
+                                                  final Point endPoint) {
         return IntStream.range(startPoint.getYCoord(), endPoint.getYCoord())
             .mapToObj(i -> IntStream.range(startPoint.getXCoord(), endPoint.getXCoord())
-                .map(j -> image.getRGB(j, i))
-                .mapToObj(CardPattern::fromColor)
+                .mapToObj(j -> this.image.getCardPattern(j, i))
                 .toArray(CardPattern[]::new))
             .collect(Collectors.toList());
     }
 
     protected <E extends Enum<E> & Maskable<List<Pattern>>> Optional<E> getByPattern(final EnumSet<E> patternSet,
                                                                                      final String pattern) {
-        return patternSet.stream().max(Comparator.comparingLong(v -> countMatches(v.getMask(), pattern)));
+        return patternSet.stream().max(Comparator.comparingLong(p -> countMatches(p.getMask(), pattern)));
     }
 
     private static long countMatches(final List<Pattern> cardPatterns,
                                      final String pattern) {
         return cardPatterns.stream().filter(p -> p.matcher(pattern).matches()).count();
-    }
-
-    private static Consumer<BufferedImage> validatePoints(final Point... points) {
-        return image -> Arrays.stream(points).forEach(p -> {
-            checkRange(p.getXCoord(), 0, image.getWidth());
-            checkRange(p.getYCoord(), 0, image.getHeight());
-        });
     }
 }

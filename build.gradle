@@ -8,18 +8,23 @@ plugins {
 }
 
 // Define the main class for the application
-mainClassName = 'HelloCv'
+mainClassName = 'io.brainshells.api.openimagecv.processor.ApplicationBootstrap'
 
 sourceSets {
-        main.java.srcDirs = ['java']
-        main.resources.srcDirs = ['resources']
+    main.java.srcDirs = ['java']
+    main.resources.srcDirs = ['resources']
 }
 
 dependencies {
-    implementation 'origami:origami:4.5.0'
-    implementation 'origami:filters:1.11'
-    implementation 'origami:sources:1.0.1'
-    testImplementation 'junit:junit:4.12'
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    implementation 'ch.qos.logback:logback-core:1.2.3'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'ch.qos.logback:logback-jackson:0.1.5'
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -33,5 +38,5 @@ repositories {
     maven {
         url "https://repo.clojars.org/"
     }
-     maven { url "https://jitpack.io" }
+    maven { url "https://jitpack.io" }
 }

@@ -1,9 +1,8 @@
 package io.brainshells.api.openimagecv.processor.management;
 
-import io.brainshells.api.openimagecv.processor.enumeration.CardPattern;
 import io.brainshells.api.openimagecv.processor.model.Card;
 import io.brainshells.api.openimagecv.processor.model.Deck;
-import io.brainshells.api.openimagecv.processor.processor.CardImageProcessorImpl;
+import io.brainshells.api.openimagecv.processor.processor.BufferedCardImageAdaptor;
 import io.brainshells.api.openimagecv.processor.utils.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,19 +11,28 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static io.brainshells.api.openimagecv.processor.management.CardImageConstants.*;
+import static io.brainshells.api.openimagecv.commons.utils.ExecutorUtils.DEFAULT_COMPLETABLE_LOG_ACTION;
+import static io.brainshells.api.openimagecv.commons.utils.ExecutorUtils.newScheduledExecutor;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.*;
 
 @Slf4j
 public class ApplicationRunner {
+
     /**
      * Application runner initialization flag
      */
     private static final AtomicReference<Boolean> INIT = new AtomicReference<>(false);
+
+    /**
+     * Application executor
+     */
+    public static final ScheduledThreadPoolExecutor EXECUTOR = newScheduledExecutor(10, "openimagecv");
 
     /**
      * Image directory
@@ -37,31 +45,39 @@ public class ApplicationRunner {
      * @param args input array of arguments
      */
     public ApplicationRunner(final String[] args) {
+        if (!INIT.compareAndSet(false, true)) {
+            throw new IllegalStateException("Application runner has been started");
+        }
+
+        log.info("Starting OpenImageCV processor with arguments: {}", Arrays.toString(args));
         if (args.length != 1) {
             log.error("Invalid arguments count: {}, (missing image directory)", args.length);
             System.exit(1);
         }
         this.imagePath = Paths.get(args[0]);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> log.info("OpenImageCV processor finished")));
     }
 
     /**
-     * Initializes application context
+     * Executes image processor task
      */
-    public void init() {
-        if (!INIT.compareAndSet(false, true)) {
-            throw new IllegalStateException("Application runner has been started");
-        }
-        log.info("Starting OpenImageCV processor with base image directory: {}", this.imagePath);
+    public void execute() {
+        log.info("Executing printing card desk task...");
 
         Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
-            .map(this.createCardDeck())
-            .forEach(this.printDeckCards());
+            .map(this.createDeck())
+            .map(this.createDeckTask())
+            .map(r -> CompletableFuture.runAsync(r, EXECUTOR))
+            .map(f -> f.whenCompleteAsync(DEFAULT_COMPLETABLE_LOG_ACTION))
+            .forEach(CompletableFuture::join);
+
+        EXECUTOR.shutdownNow();
     }
 
     public void reinit2() {
         Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
             .forEach(file -> {
-                final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
+                final BufferedCardImageAdaptor cardImageProcessor = new BufferedCardImageAdaptor(ImageUtils.loadImage(file));
                 final int count = cardImageProcessor.getCardsAmount(CARD_RANK_RANGE.getStartPoint(), CARD_RANK_RANGE.getEndPoint());
                 log.info("Count: {}", count);
             });
@@ -98,12 +114,12 @@ public class ApplicationRunner {
     }
 
     public void reinit() {
-        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
-            .forEach(file -> {
-                final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
-                final CardPattern[] pattern = cardImageProcessor.getCardPattern(CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getStartPoint(), CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getEndPoint());
-                log.info("{} - {}", file.getName(), this.compress(CardPattern.serialize(pattern)));
-            });
+//        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
+//            .forEach(file -> {
+//                final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
+//                final CardPattern[] pattern = cardImageProcessor.getCardPattern(CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getStartPoint(), CARD_SUIT_START_RANGE.expand(CARD_EXPAND_RANGE, 2).getEndPoint());
+//                log.info("{} - {}", file.getName(), this.compress(CardPattern.serialize(pattern)));
+//            });
 //        Arrays.stream(ImageUtils.listOfFiles(this.imagePath))
 //            .forEach(file -> {
 //                final CardImageProcessorImpl cardImageProcessor = new CardImageProcessorImpl(ImageUtils.loadImage(file));
@@ -119,8 +135,8 @@ public class ApplicationRunner {
      *
      * @return operator to process file
      */
-    private Consumer<? super Deck> printDeckCards() {
-        return deck -> {
+    private Function<Deck, Runnable> createDeckTask() {
+        return deck -> () -> {
             final String deckCards = deck.getCards(CARD_RANK_RANGE, CARD_RANK_START_RANGE, CARD_SUIT_START_RANGE)
                 .stream()
                 .map(Card::toString)
@@ -134,11 +150,11 @@ public class ApplicationRunner {
      *
      * @return functional deck operator
      */
-    private Function<File, Deck> createCardDeck() {
+    private Function<File, Deck> createDeck() {
         return file -> {
             final BufferedImage image = ImageUtils.loadImage(file);
-            final CardManager cardManager = new CardManager(new CardImageProcessorImpl(image));
-            return new Deck(file.getName(), image, cardManager);
+            final CardManager cardManager = new CardManager(image);
+            return new Deck(file.getName(), cardManager);
         };
     }
 }
