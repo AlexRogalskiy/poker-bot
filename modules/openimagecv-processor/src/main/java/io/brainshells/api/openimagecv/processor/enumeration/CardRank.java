@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Getter
 @RequiredArgsConstructor
-public enum CardRank implements Maskable {
+public enum CardRank implements Maskable, Predicate<CardRank> {
     DEUCE("2",
         "^B*W{81,87}B{3,9}W{25,31}B{7,13}W{22,28}B{9,15}W{20,26}B{2,8}W{0,6}B{3,9}W{18,24}B{2,8}W{3,9}B{1,7}W{20,26}BW{5,11}B{1,7}W{29,35}B{1,7}W{29,35}B{1,7}W{29,35}B{1,7}W{28,34}B{2,8}W{28,34}B{1,7}W{28,34}B{1,7}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{1,7}W{27,33}B{2,8}W{28,34}B{12,18}W{18,24}B{12,18}W{18,24}B{13,19}W{82,88}",
         "^B*W{79,85}B{4,10}W{24,30}B{8,14}W{21,27}B{10,16}W{19,25}B{3,9}W{0,6}B{2,8}W{19,25}B{1,7}W{3,9}B{2,8}W{19,25}B{2,5}W{5,11}B{1,7}W{29,35}B{1,7}W{29,35}B{1,7}W{29,35}B{1,7}W{28,34}B{1,7}W{28,34}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{26,32}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{2,8}W{27,33}B{13,19}W{17,23}B{13,19}W{17,23}B{13,19}W{83,89}",
@@ -151,16 +153,11 @@ public enum CardRank implements Maskable {
     }
 
     /**
-     * Returns {@link CardRank} by input {@link String} code
-     *
-     * @param code - initial input {@link String} code
-     * @return card rank
+     * {@inheritDoc}
      */
-    public static CardRank fromCode(final String code) {
-        return Arrays.stream(values())
-            .filter(type -> type.getValue().equals(code))
-            .findFirst()
-            .orElse(null);
+    @Override
+    public boolean test(final CardRank rank) {
+        return Objects.equals(this, rank);
     }
 
     /**
@@ -181,5 +178,18 @@ public enum CardRank implements Maskable {
     @Override
     public List<Pattern> getMask() {
         return this.getPatterns();
+    }
+
+    /**
+     * Returns {@link CardRank} by input {@link String} code
+     *
+     * @param code - initial input {@link String} code
+     * @return card rank
+     */
+    public static CardRank fromCode(final String code) {
+        return Arrays.stream(values())
+            .filter(type -> type.getValue().equals(code))
+            .findFirst()
+            .orElse(null);
     }
 }

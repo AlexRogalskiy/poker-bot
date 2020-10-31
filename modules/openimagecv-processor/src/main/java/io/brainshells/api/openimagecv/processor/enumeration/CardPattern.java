@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public enum CardPattern {
+public enum CardPattern implements Predicate<CardPattern> {
     WHITE("W"),
     BLACK("B");
 
@@ -16,6 +18,14 @@ public enum CardPattern {
      * Card pattern
      */
     private final String value;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean test(final CardPattern pattern) {
+        return Objects.equals(this, pattern);
+    }
 
     /**
      * Returns deserialized array of {@link CardPattern}s from input pattern
