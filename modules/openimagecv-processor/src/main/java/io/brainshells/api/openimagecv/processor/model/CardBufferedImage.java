@@ -23,7 +23,7 @@ public class CardBufferedImage implements Serializable {
      */
     private static final long serialVersionUID = -416963886066633033L;
 
-    private BufferedImage image;
+    private transient BufferedImage image;
 
     public CardBufferedImage(final BufferedImage image) {
         checkNotNull(image, "Image should not be null");
