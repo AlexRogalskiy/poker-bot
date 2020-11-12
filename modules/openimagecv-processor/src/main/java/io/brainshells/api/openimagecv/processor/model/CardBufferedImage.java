@@ -4,10 +4,7 @@ import io.brainshells.api.openimagecv.processor.enumeration.CardPattern;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
 
 import static io.brainshells.api.openimagecv.processor.utils.ValidationUtils.checkNotNull;
@@ -25,10 +22,42 @@ public class CardBufferedImage implements Serializable {
 
     private transient BufferedImage image;
 
+    /**
+     * Default card buffered image constructor with input image {@link InputStream}
+     *
+     * @param stream - content of the image as {@link InputStream}
+     */
+    public CardBufferedImage(final InputStream stream) throws IOException {
+        this(ImageIO.read(stream));
+    }
+
+    /**
+     * Default card buffered image constructor with input image {@link BufferedImage}
+     *
+     * @param image - content of the image as {@link BufferedImage}
+     */
     public CardBufferedImage(final BufferedImage image) {
         checkNotNull(image, "Image should not be null");
 
         this.image = image;
+    }
+
+    /**
+     * Returns image {@code int} width
+     *
+     * @return {@code int} width
+     */
+    public int getWidth() {
+        return this.image.getWidth();
+    }
+
+    /**
+     * Returns image {@code int} height
+     *
+     * @return {@code int} height
+     */
+    public int getHeight() {
+        return this.image.getHeight();
     }
 
     /**
