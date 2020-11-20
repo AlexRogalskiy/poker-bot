@@ -33,6 +33,23 @@ import static javax.imageio.ImageIO.read;
 @UtilityClass
 public class ImageUtils {
 
+    public static void validateFileWritable(final File f) {
+        final File file = f.getAbsoluteFile();
+        final File parent = file.getParentFile();
+
+        if (file.exists()) {
+            if (!file.canWrite()) {
+                throw new IllegalArgumentException("Can not overwrite existing file " + file.getAbsolutePath());
+            }
+        } else if (parent.exists()) {
+            if (!parent.canWrite()) {
+                throw new IllegalArgumentException("Can not write new file to directory " + parent.getAbsolutePath());
+            }
+        } else if (!parent.mkdirs()) {
+            throw new IllegalArgumentException("Could not create parent directory " + parent.getAbsolutePath());
+        }
+    }
+
     public static BufferedImage toBufferedImage(final byte[] content) throws IOException {
         return read(new ByteArrayInputStream(content));
     }
@@ -54,7 +71,7 @@ public class ImageUtils {
         imageWriterParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         imageWriterParam.setCompressionQuality(1f);
 
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
         writer.setOutput(new MemoryCacheImageOutputStream(output));
         writer.write(null, new IIOImage(newBufferedImage, null, null), imageWriterParam);
         writer.dispose();
@@ -112,8 +129,8 @@ public class ImageUtils {
             int nextWidth = max(rescaledImage.getWidth() / 2, desiredWidth);
             int nextHeight = max(rescaledImage.getHeight() / 2, desiredHeight);
 
-            BufferedImage nextScaledImage = new BufferedImage(nextWidth, nextHeight, image.getTransparency() == OPAQUE ? TYPE_INT_RGB : TYPE_INT_ARGB);
-            Graphics2D graphics = nextScaledImage.createGraphics();
+            final BufferedImage nextScaledImage = new BufferedImage(nextWidth, nextHeight, image.getTransparency() == OPAQUE ? TYPE_INT_RGB : TYPE_INT_ARGB);
+            final Graphics2D graphics = nextScaledImage.createGraphics();
             graphics.setRenderingHint(KEY_INTERPOLATION, VALUE_INTERPOLATION_BILINEAR);
             graphics.drawImage(rescaledImage, 0, 0, nextWidth, nextHeight, null);
             graphics.dispose();
@@ -134,7 +151,9 @@ public class ImageUtils {
     public static String getImageAsBase64(final File file, final String contentType) throws IOException {
         final BufferedImage bufferedImage = ImageIO.read(file);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
         ImageIO.write(bufferedImage, contentType.split("/")[1], bos);
+
         final byte[] imageBytes = bos.toByteArray();
         return Base64.getEncoder().encodeToString(imageBytes);
     }
