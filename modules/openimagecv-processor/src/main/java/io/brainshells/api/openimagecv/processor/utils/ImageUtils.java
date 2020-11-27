@@ -12,10 +12,8 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.awt.image.DataBufferInt;
+import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Base64;
@@ -271,5 +269,55 @@ public class ImageUtils {
             range.getEndPoint().getXCoord() - range.getStartPoint().getXCoord(),
             range.getEndPoint().getYCoord() - range.getStartPoint().getYCoord()
         );
+    }
+
+    public static int average(final int oldAverageColor, final int newColor, final int multiplier) {
+        if (oldAverageColor == newColor) {
+            return oldAverageColor;
+        }
+
+        float red0 = (oldAverageColor >> 16) & 0xff;
+        float green0 = (oldAverageColor >> 8) & 0xff;
+        float blue0 = oldAverageColor & 0xff;
+
+        float red1 = (newColor >> 16) & 0xff;
+        float green1 = (newColor >> 8) & 0xff;
+        float blue1 = newColor & 0xff;
+
+        int color = (int) 255;
+        color = (color << 8) + (int) ((red0 * multiplier + red1) / (multiplier + 1));
+        color = (color << 8) + (int) ((green0 * multiplier + green1) / (multiplier + 1));
+        color = (color << 8) + (int) ((blue0 * multiplier + blue1) / (multiplier + 1));
+
+        return color;
+    }
+
+    public static BufferedImage convertRawRgbToImage(final int width, final int height, final int[] inputColors) {
+        final BufferedImage leftImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        final int[] leftColors = ((DataBufferInt) leftImage.getRaster().getDataBuffer()).getData();
+        if (width * height >= 0) {
+            System.arraycopy(inputColors, 0, leftColors, 0, width * height);
+        }
+        return leftImage;
+    }
+
+    public static BufferedImage convertImage(BufferedImage inputImage) {
+        if (inputImage.getType() != BufferedImage.TYPE_INT_ARGB) {
+            final BufferedImage tempImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            final Graphics g = tempImage.createGraphics();
+            g.drawImage(inputImage, 0, 0, null);
+            g.dispose();
+            inputImage = tempImage;
+        }
+        return inputImage;
+    }
+
+    public static void writeImage(final String outputImageFile, final BufferedImage outputImage) throws IOException {
+        ImageIO.write(outputImage, "png", new FileOutputStream(outputImageFile, false));
+    }
+
+    public static BufferedImage readImage(final String inputImageFile) throws IOException {
+        final BufferedImage inputImage = ImageIO.read(new FileInputStream(inputImageFile));
+        return convertImage(inputImage);
     }
 }
