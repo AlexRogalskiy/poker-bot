@@ -1,11 +1,12 @@
 package io.brainshells.api.openimagecv.commons.resource;
 
-import io.brainshells.api.openimagecv.commons.enumeration.ResourceType;
-
 import java.io.IOException;
 import java.io.InputStream;
 
+import io.brainshells.api.openimagecv.commons.enumeration.ResourceType;
+
 public abstract class Resource {
+
     private final ResourceType resourceType;
     private InputStream stream;
 
@@ -19,11 +20,9 @@ public abstract class Resource {
 
     public abstract boolean canBeOpened();
 
-    protected abstract InputStream openStream()
-        throws IOException;
+    protected abstract InputStream openStream() throws IOException;
 
-    public InputStream getInputStream()
-        throws IOException {
+    public InputStream getInputStream() throws IOException {
         if (stream == null) {
             stream = openStream();
         }
@@ -31,10 +30,12 @@ public abstract class Resource {
         return stream;
     }
 
-    protected ResourceType identifyResourceType(final String fileName) throws IllegalArgumentException {
+    protected ResourceType identifyResourceType(final String fileName)
+        throws IllegalArgumentException {
         final ResourceType resourceType = ResourceType.getByFileName(fileName);
         if (resourceType == null) {
-            throw new IllegalArgumentException("Cannot find a resource type for " + fileName);
+            throw new IllegalArgumentException(
+                "Cannot find a resource type for " + fileName);
         }
 
         return resourceType;

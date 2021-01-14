@@ -1,14 +1,14 @@
 package io.brainshells.api.openimagecv.processor.helper;
 
+import static io.brainshells.api.openimagecv.processor.utils.ImageUtils.readImage;
+import static io.brainshells.api.openimagecv.processor.utils.ImageUtils.writeImage;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-
-import static io.brainshells.api.openimagecv.processor.utils.ImageUtils.readImage;
-import static io.brainshells.api.openimagecv.processor.utils.ImageUtils.writeImage;
 
 /**
  * Image region growing example.

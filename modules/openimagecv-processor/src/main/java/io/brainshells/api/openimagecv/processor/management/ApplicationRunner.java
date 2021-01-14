@@ -1,9 +1,10 @@
 package io.brainshells.api.openimagecv.processor.management;
 
-import io.brainshells.api.openimagecv.processor.model.Card;
-import io.brainshells.api.openimagecv.processor.model.Deck;
-import io.brainshells.api.openimagecv.processor.utils.ImageUtils;
-import lombok.extern.slf4j.Slf4j;
+import static io.brainshells.api.openimagecv.commons.utils.ExecutorUtils.DEFAULT_COMPLETABLE_LOG_ACTION;
+import static io.brainshells.api.openimagecv.commons.utils.ExecutorUtils.newScheduledExecutor;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_RANK_RANGE;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_RANK_START_RANGE;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_SUIT_START_RANGE;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,9 +17,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static io.brainshells.api.openimagecv.commons.utils.ExecutorUtils.DEFAULT_COMPLETABLE_LOG_ACTION;
-import static io.brainshells.api.openimagecv.commons.utils.ExecutorUtils.newScheduledExecutor;
-import static io.brainshells.api.openimagecv.processor.management.CardConstants.*;
+import io.brainshells.api.openimagecv.processor.model.Card;
+import io.brainshells.api.openimagecv.processor.model.Deck;
+import io.brainshells.api.openimagecv.processor.utils.ImageUtils;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ApplicationRunner {

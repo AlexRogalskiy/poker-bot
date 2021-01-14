@@ -1,7 +1,6 @@
 package io.brainshells.api.openimagecv.commons.utils;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import static java.lang.String.format;
 
 import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -9,7 +8,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
-import static java.lang.String.format;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @UtilityClass

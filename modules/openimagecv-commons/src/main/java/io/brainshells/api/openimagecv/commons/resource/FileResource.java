@@ -1,8 +1,13 @@
 package io.brainshells.api.openimagecv.commons.resource;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class FileResource extends Resource {
+
     private final File file;
 
     public FileResource(final File file) {
@@ -10,15 +15,18 @@ public class FileResource extends Resource {
         this.file = file;
     }
 
+    @Override
     public boolean canBeOpened() {
-        return file.exists();
+        return this.file.exists();
     }
 
+    @Override
     protected InputStream openStream() throws IOException {
-        return new BufferedInputStream(new FileInputStream(file));
+        return new BufferedInputStream(new FileInputStream(this.file));
     }
 
+    @Override
     public String toString() {
-        return "File: " + file;
+        return "File: " + this.file;
     }
 }

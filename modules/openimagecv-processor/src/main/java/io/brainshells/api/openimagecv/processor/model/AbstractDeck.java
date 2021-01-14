@@ -1,11 +1,11 @@
 package io.brainshells.api.openimagecv.processor.model;
 
-import io.brainshells.api.openimagecv.processor.management.CardManager;
-import lombok.Getter;
-
 import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.brainshells.api.openimagecv.processor.management.CardManager;
+import lombok.Getter;
 
 @Getter
 public abstract class AbstractDeck implements Serializable {

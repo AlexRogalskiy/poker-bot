@@ -1,14 +1,19 @@
 package io.brainshells.api.openimagecv.processor.model;
 
-import io.brainshells.api.openimagecv.processor.enumeration.CardPattern;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.Arrays;
-
 import static io.brainshells.api.openimagecv.processor.utils.ValidationUtils.checkNotNull;
 import static io.brainshells.api.openimagecv.processor.utils.ValidationUtils.checkRange;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import io.brainshells.api.openimagecv.processor.enumeration.CardPattern;
 
 /**
  * Buffered image wrapper that provides operations on cards

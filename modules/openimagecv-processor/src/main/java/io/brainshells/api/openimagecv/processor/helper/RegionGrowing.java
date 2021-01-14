@@ -1,7 +1,7 @@
 package io.brainshells.api.openimagecv.processor.helper;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.FileInputStream;
@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 /**
  * Image region growing example.

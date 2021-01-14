@@ -1,8 +1,6 @@
 package io.brainshells.api.openimagecv.processor.model;
 
-import io.brainshells.api.openimagecv.processor.management.CardManager;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_EXPAND_RANGE;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -12,7 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_EXPAND_RANGE;
+import io.brainshells.api.openimagecv.processor.management.CardManager;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

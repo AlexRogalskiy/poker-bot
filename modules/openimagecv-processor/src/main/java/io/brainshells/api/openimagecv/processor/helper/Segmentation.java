@@ -1,12 +1,13 @@
 package io.brainshells.api.openimagecv.processor.helper;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * Efficient image manipulation example.

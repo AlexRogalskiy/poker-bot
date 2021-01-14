@@ -1,19 +1,23 @@
 package io.brainshells.api.openimagecv.processor.processor;
 
+import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_SPACE_FACED_PATTERN;
+
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import io.brainshells.api.openimagecv.processor.enumeration.CardPattern;
 import io.brainshells.api.openimagecv.processor.enumeration.CardRank;
 import io.brainshells.api.openimagecv.processor.enumeration.CardSuit;
 import io.brainshells.api.openimagecv.processor.enumeration.Maskable;
 import io.brainshells.api.openimagecv.processor.model.CardBufferedImage;
 import io.brainshells.api.openimagecv.processor.model.Point;
-
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static io.brainshells.api.openimagecv.processor.management.CardConstants.CARD_SPACE_FACED_PATTERN;
 
 /**
  * Card image processor implementation that operates on provided {@link BufferedImage}

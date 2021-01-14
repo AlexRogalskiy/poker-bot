@@ -7,6 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class UrlResource extends Resource {
+    /**
+     * Classpath prefix
+     */
     private static final String CLASSPATH_PREFIX = "classpath:";
 
     private static final String SLASH_PREFIX = "/";
@@ -34,11 +37,14 @@ public class UrlResource extends Resource {
             try {
                 this.url = new URL(url);
             } catch (MalformedURLException e) {
-                throw new IllegalArgumentException(String.format("Badly formed URL %s - %s", url, e.getMessage()));
+                throw new IllegalArgumentException(
+                    String.format("Badly formed URL %s - %s", url,
+                        e.getMessage()));
             }
         }
     }
 
+    @Override
     public boolean canBeOpened() {
         if (this.isMissingClasspathResource) {
             return false;
@@ -51,10 +57,12 @@ public class UrlResource extends Resource {
         return true;
     }
 
+    @Override
     protected InputStream openStream() throws IOException {
         return new BufferedInputStream(this.url.openStream());
     }
 
+    @Override
     public String toString() {
         if (!this.isMissingClasspathResource) {
             return "URL " + this.url.toString();

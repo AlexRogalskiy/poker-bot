@@ -1,12 +1,12 @@
 package io.brainshells.api.openimagecv.processor.utils;
 
-import lombok.experimental.UtilityClass;
+import static java.lang.String.format;
 
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 
-import static java.lang.String.format;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ValidationUtils {

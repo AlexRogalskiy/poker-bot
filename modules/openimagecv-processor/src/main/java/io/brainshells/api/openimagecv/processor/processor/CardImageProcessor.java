@@ -1,11 +1,11 @@
 package io.brainshells.api.openimagecv.processor.processor;
 
+import java.io.Serializable;
+import java.util.Optional;
+
 import io.brainshells.api.openimagecv.processor.enumeration.CardRank;
 import io.brainshells.api.openimagecv.processor.enumeration.CardSuit;
 import io.brainshells.api.openimagecv.processor.model.Point;
-
-import java.io.Serializable;
-import java.util.Optional;
 
 public interface CardImageProcessor extends Serializable {
     /**

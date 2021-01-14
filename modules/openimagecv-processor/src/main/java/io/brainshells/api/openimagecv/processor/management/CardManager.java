@@ -1,5 +1,10 @@
 package io.brainshells.api.openimagecv.processor.management;
 
+import static io.brainshells.api.openimagecv.processor.utils.ValidationUtils.checkNotNull;
+
+import java.awt.image.BufferedImage;
+import java.io.Serializable;
+
 import io.brainshells.api.openimagecv.processor.enumeration.CardRank;
 import io.brainshells.api.openimagecv.processor.enumeration.CardSuit;
 import io.brainshells.api.openimagecv.processor.exception.UnresolvableCardRankException;
@@ -9,11 +14,6 @@ import io.brainshells.api.openimagecv.processor.model.Point;
 import io.brainshells.api.openimagecv.processor.model.Range;
 import io.brainshells.api.openimagecv.processor.processor.BufferedCardImageAdaptor;
 import io.brainshells.api.openimagecv.processor.processor.CardImageProcessor;
-
-import java.awt.image.BufferedImage;
-import java.io.Serializable;
-
-import static io.brainshells.api.openimagecv.processor.utils.ValidationUtils.checkNotNull;
 
 public class CardManager implements Serializable {
 
