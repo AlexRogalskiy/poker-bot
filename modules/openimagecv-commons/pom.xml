@@ -7,7 +7,7 @@
         <groupId>io.brainshells.api</groupId>
         <artifactId>openimagecv-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <name>io.brainshells.api.openimagecv.commons</name>
