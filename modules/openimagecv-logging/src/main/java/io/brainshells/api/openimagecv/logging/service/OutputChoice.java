@@ -1,21 +1,14 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
 import java.io.PrintStream;
 
 /**
  * This class encapsulates the user's choice of output target.
- *
- * @author Ceki G&uuml;lc&uuml;
  */
 class OutputChoice {
 
-    enum OutputChoiceType {
-        SYS_OUT, CACHED_SYS_OUT, SYS_ERR, CACHED_SYS_ERR, FILE;
-    }
-
     protected final OutputChoiceType outputChoiceType;
     protected final PrintStream targetPrintStream;
-
     OutputChoice(OutputChoiceType outputChoiceType) {
         this.outputChoiceType = outputChoiceType;
         if (outputChoiceType == OutputChoiceType.CACHED_SYS_OUT) {
@@ -41,6 +34,10 @@ class OutputChoice {
                 throw new IllegalArgumentException();
         }
 
+    }
+
+    enum OutputChoiceType {
+        SYS_OUT, CACHED_SYS_OUT, SYS_ERR, CACHED_SYS_ERR, FILE
     }
 
 }

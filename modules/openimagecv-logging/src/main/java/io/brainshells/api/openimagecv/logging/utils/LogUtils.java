@@ -1,6 +1,6 @@
 package io.brainshells.api.openimagecv.logging.utils;
 
-import io.brainshells.api.openimagecv.logging.Ansi;
+import io.brainshells.api.openimagecv.logging.service.Ansi;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;

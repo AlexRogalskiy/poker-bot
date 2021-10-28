@@ -1,6 +1,7 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
 import io.brainshells.api.openimagecv.logging.utils.LogUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +18,6 @@ import java.util.List;
  * <p>
  * NOTE: Nothing stops you from combining multiple FG colors or BG colors, but
  * only the last one will display.
- *
- * @author dain
  */
 public final class Ansi {
 

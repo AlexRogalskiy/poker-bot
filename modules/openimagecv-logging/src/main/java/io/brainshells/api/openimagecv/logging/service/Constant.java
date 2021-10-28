@@ -1,4 +1,4 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
 import java.util.HashMap;
 import java.util.Map;

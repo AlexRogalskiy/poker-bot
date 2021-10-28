@@ -1,6 +1,7 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
 import io.brainshells.api.openimagecv.logging.utils.LogUtils;
+
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
@@ -11,21 +12,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * @author biezhi
- * @date 2018/4/4
- */
 public class FileRunner implements Runnable, Closeable {
 
-    private BufferedWriter out;
-    private File file;
     private final Queue<String> logQueue = new ConcurrentLinkedQueue<>();
-
-    private String lastWriteDate;
-
     private final String logName;
     private final String logDir;
     private final long maxSize;
+    private BufferedWriter out;
+    private File file;
+    private String lastWriteDate;
     private volatile boolean isRunning;
 
     public FileRunner(String logName, String logDir, long maxSize) {

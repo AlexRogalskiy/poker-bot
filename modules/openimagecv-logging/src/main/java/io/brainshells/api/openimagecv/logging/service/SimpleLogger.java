@@ -1,10 +1,12 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
-import static io.brainshells.api.openimagecv.logging.Constant.LOG_DESC_MAP;
+import static io.brainshells.api.openimagecv.logging.service.Constant.LOG_DESC_MAP;
 
 import io.brainshells.api.openimagecv.logging.utils.LogUtils;
+
 import java.io.PrintStream;
 import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.event.LoggingEvent;
 import org.slf4j.helpers.FormattingTuple;
@@ -112,55 +114,27 @@ import org.slf4j.spi.LocationAwareLogger;
  * <a href="http://commons.apache.org/logging/">Apache Commons Logging</a>'s
  * SimpleLog.
  * </p>
- *
- * @author Ceki G&uuml;lc&uuml;
- * @author Scott Sanders
- * @author Rod Waldhoff
- * @author Robert Burrell Donkin
- * @author C&eacute;drik LIME
  */
 public class SimpleLogger extends MarkerIgnoringBase {
-
-    private static final long serialVersionUID = -632788891211436180L;
 
     static final int LOG_LEVEL_TRACE = LocationAwareLogger.TRACE_INT;
     static final int LOG_LEVEL_DEBUG = LocationAwareLogger.DEBUG_INT;
     static final int LOG_LEVEL_INFO = LocationAwareLogger.INFO_INT;
     static final int LOG_LEVEL_WARN = LocationAwareLogger.WARN_INT;
     static final int LOG_LEVEL_ERROR = LocationAwareLogger.ERROR_INT;
-
     /**
      * The OFF level can only be used in configuration files to disable
      * logging. It has no printing method associated with it in o.s.Logger
      * interface.
      */
     protected static final int LOG_LEVEL_OFF = LOG_LEVEL_ERROR + 10;
-
+    private static final long serialVersionUID = -632788891211436180L;
     private static boolean INITIALIZED = false;
     private static SimpleLoggerConfiguration CONFIG_PARAMS = null;
-
-    static void lazyInit() {
-        if (INITIALIZED) {
-            return;
-        }
-        INITIALIZED = true;
-        init();
-    }
-
-    /**
-     * external software might be invoking this method directly. Do not rename
-     * or change its semantics.
-     */
-    static void init() {
-        CONFIG_PARAMS = new SimpleLoggerConfiguration();
-        CONFIG_PARAMS.init();
-    }
-
     /**
      * The current impl level
      */
     protected int rootLevel;
-
     /**
      * The short name of this simple impl instance
      */
@@ -181,6 +155,23 @@ public class SimpleLogger extends MarkerIgnoringBase {
         }
     }
 
+    static void lazyInit() {
+        if (INITIALIZED) {
+            return;
+        }
+        INITIALIZED = true;
+        init();
+    }
+
+    /**
+     * external software might be invoking this method directly. Do not rename
+     * or change its semantics.
+     */
+    static void init() {
+        CONFIG_PARAMS = new SimpleLoggerConfiguration();
+        CONFIG_PARAMS.init();
+    }
+
     private String recursivelyComputeLevelString() {
         String tempName = name;
         String levelString = null;
@@ -189,7 +180,7 @@ public class SimpleLogger extends MarkerIgnoringBase {
             tempName = tempName.substring(0, indexOfLastDot);
             levelString = CONFIG_PARAMS
                 .getStringProp(Constant.LOG_KEY_PREFIX + tempName, null);
-            indexOfLastDot = String.valueOf(tempName).lastIndexOf(".");
+            indexOfLastDot = tempName.lastIndexOf(".");
         }
         return levelString;
     }
@@ -253,7 +244,7 @@ public class SimpleLogger extends MarkerIgnoringBase {
             }
             buf.append(shortLogName);
         } else if (CONFIG_PARAMS.showLogName) {
-            buf.append(String.valueOf(name)).append(" | ");
+            buf.append(name).append(" | ");
         }
 
         // Append the message
@@ -269,7 +260,7 @@ public class SimpleLogger extends MarkerIgnoringBase {
                 if (null != t) {
                     String stack = " " + LogUtils.stackTraceToString(t);
                     buf.append(stack);
-                    System.err.println(buf.toString());
+                    System.err.println(buf);
                 } else {
                     System.out.println(buf.toString());
                     System.out.flush();
@@ -311,7 +302,7 @@ public class SimpleLogger extends MarkerIgnoringBase {
      * @param arg2
      */
     private void formatAndLog(int level, String format, Object arg1,
-        Object arg2) {
+                              Object arg2) {
         if (!isLevelEnabled(level)) {
             return;
         }

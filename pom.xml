@@ -80,6 +80,7 @@
         <module>modules/openimagecv-all</module>
         <module>modules/openimagecv-commons</module>
         <module>modules/openimagecv-captcha</module>
+        <module>modules/openimagecv-captcha2</module>
         <module>modules/openimagecv-logging</module>
         <module>modules/openimagecv-processor</module>
     </modules>

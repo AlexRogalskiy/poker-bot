@@ -10,11 +10,11 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <name>io.brainshells.api.openimagecv.captcha</name>
+    <name>io.brainshells.api.openimagecv.captcha2</name>
     <description>OpenImageCV Captcha API</description>
-    <artifactId>openimagecv-captcha</artifactId>
+    <artifactId>openimagecv-captcha2</artifactId>
     <packaging>jar</packaging>
-    <url>https://github.com/AlexRogalskiy/openimagecv/tree/master/modules/openimagecv-captcha</url>
+    <url>https://github.com/AlexRogalskiy/openimagecv/tree/master/modules/openimagecv-captcha2</url>
     <inceptionYear>2020</inceptionYear>
 
     <properties>

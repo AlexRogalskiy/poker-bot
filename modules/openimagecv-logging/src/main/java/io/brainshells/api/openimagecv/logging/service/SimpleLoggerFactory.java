@@ -1,15 +1,14 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
 /**
  * An implementation of {@link ILoggerFactory} which always returns {@link
  * SimpleLogger} instances.
- *
- * @author Ceki G&uuml;lc&uuml;
  */
 public class SimpleLoggerFactory implements ILoggerFactory {
 

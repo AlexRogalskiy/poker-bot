@@ -1,12 +1,10 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
 import org.slf4j.helpers.NOPMDCAdapter;
 import org.slf4j.spi.MDCAdapter;
 
 /**
  * This implementation is bound to {@link NOPMDCAdapter}.
- *
- * @author Ceki G&uuml;lc&uuml;
  */
 public class StaticMDCBinder {
 

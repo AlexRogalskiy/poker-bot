@@ -1,37 +1,32 @@
-package io.brainshells.api.openimagecv.logging;
+package io.brainshells.api.openimagecv.logging.service;
 
-import static io.brainshells.api.openimagecv.logging.Constant.CONFIGURATION_FILE;
-import static io.brainshells.api.openimagecv.logging.Constant.CONFIGURATION_FILE0;
-import static io.brainshells.api.openimagecv.logging.Constant.DATE_TIME_FORMAT_STR_DEFAULT;
-import static io.brainshells.api.openimagecv.logging.Constant.DEBUG;
-import static io.brainshells.api.openimagecv.logging.Constant.ERROR;
-import static io.brainshells.api.openimagecv.logging.Constant.INFO;
-import static io.brainshells.api.openimagecv.logging.Constant.LOG_ERR;
-import static io.brainshells.api.openimagecv.logging.Constant.LOG_OUT;
-import static io.brainshells.api.openimagecv.logging.Constant.OFF;
-import static io.brainshells.api.openimagecv.logging.Constant.TRACE;
-import static io.brainshells.api.openimagecv.logging.Constant.WARN;
+import static io.brainshells.api.openimagecv.logging.service.Constant.CONFIGURATION_FILE;
+import static io.brainshells.api.openimagecv.logging.service.Constant.CONFIGURATION_FILE0;
+import static io.brainshells.api.openimagecv.logging.service.Constant.DATE_TIME_FORMAT_STR_DEFAULT;
+import static io.brainshells.api.openimagecv.logging.service.Constant.DEBUG;
+import static io.brainshells.api.openimagecv.logging.service.Constant.ERROR;
+import static io.brainshells.api.openimagecv.logging.service.Constant.INFO;
+import static io.brainshells.api.openimagecv.logging.service.Constant.LOG_ERR;
+import static io.brainshells.api.openimagecv.logging.service.Constant.LOG_OUT;
+import static io.brainshells.api.openimagecv.logging.service.Constant.OFF;
+import static io.brainshells.api.openimagecv.logging.service.Constant.TRACE;
+import static io.brainshells.api.openimagecv.logging.service.Constant.WARN;
 
 import io.brainshells.api.openimagecv.logging.utils.LogUtils;
+
 import java.io.File;
 import java.io.InputStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
+
 import org.slf4j.helpers.Util;
 
 /**
  * This class holds configuration values for {@link SimpleLogger}. The values
  * are computed at runtime. See {@link SimpleLogger} documentation for more
  * information.
- *
- * @author Ceki G&uuml;lc&uuml;
- * @author Scott Sanders
- * @author Rod Waldhoff
- * @author Robert Burrell Donkin
- * @author C&eacute;drik LIME
- * @since 1.7.25
  */
 public class SimpleLoggerConfiguration {
 
@@ -50,6 +45,45 @@ public class SimpleLoggerConfiguration {
     protected int defaultLogLevel = SimpleLogger.LOG_LEVEL_INFO;
 
     protected FileRunner fileRunner;
+
+    static int stringToLevel(String levelStr) {
+        if (TRACE.equalsIgnoreCase(levelStr)) {
+            return SimpleLogger.LOG_LEVEL_TRACE;
+        } else if (DEBUG.equalsIgnoreCase(levelStr)) {
+            return SimpleLogger.LOG_LEVEL_DEBUG;
+        } else if (INFO.equalsIgnoreCase(levelStr)) {
+            return SimpleLogger.LOG_LEVEL_INFO;
+        } else if (WARN.equalsIgnoreCase(levelStr)) {
+            return SimpleLogger.LOG_LEVEL_WARN;
+        } else if (ERROR.equalsIgnoreCase(levelStr)) {
+            return SimpleLogger.LOG_LEVEL_ERROR;
+        } else if (OFF.equalsIgnoreCase(levelStr)) {
+            return SimpleLogger.LOG_LEVEL_OFF;
+        }
+        // assume INFO by default
+        return SimpleLogger.LOG_LEVEL_INFO;
+    }
+
+    private static OutputChoice computeOutputChoice(String logFilePath,
+                                                    boolean cacheOutputStream) {
+        if (LOG_ERR.equalsIgnoreCase(logFilePath)) {
+            if (cacheOutputStream) {
+                return new OutputChoice(
+                    OutputChoice.OutputChoiceType.CACHED_SYS_ERR);
+            } else {
+                return new OutputChoice(OutputChoice.OutputChoiceType.SYS_ERR);
+            }
+        } else if (LOG_OUT.equalsIgnoreCase(logFilePath)) {
+            if (cacheOutputStream) {
+                return new OutputChoice(
+                    OutputChoice.OutputChoiceType.CACHED_SYS_OUT);
+            } else {
+                return new OutputChoice(OutputChoice.OutputChoiceType.SYS_OUT);
+            }
+        } else {
+            return new OutputChoice(OutputChoice.OutputChoiceType.FILE);
+        }
+    }
 
     void init() {
         loadProperties();
@@ -199,45 +233,6 @@ public class SimpleLoggerConfiguration {
             // Ignore
         }
         return (prop == null) ? properties.getProperty(name) : prop;
-    }
-
-    static int stringToLevel(String levelStr) {
-        if (TRACE.equalsIgnoreCase(levelStr)) {
-            return SimpleLogger.LOG_LEVEL_TRACE;
-        } else if (DEBUG.equalsIgnoreCase(levelStr)) {
-            return SimpleLogger.LOG_LEVEL_DEBUG;
-        } else if (INFO.equalsIgnoreCase(levelStr)) {
-            return SimpleLogger.LOG_LEVEL_INFO;
-        } else if (WARN.equalsIgnoreCase(levelStr)) {
-            return SimpleLogger.LOG_LEVEL_WARN;
-        } else if (ERROR.equalsIgnoreCase(levelStr)) {
-            return SimpleLogger.LOG_LEVEL_ERROR;
-        } else if (OFF.equalsIgnoreCase(levelStr)) {
-            return SimpleLogger.LOG_LEVEL_OFF;
-        }
-        // assume INFO by default
-        return SimpleLogger.LOG_LEVEL_INFO;
-    }
-
-    private static OutputChoice computeOutputChoice(String logFilePath,
-        boolean cacheOutputStream) {
-        if (LOG_ERR.equalsIgnoreCase(logFilePath)) {
-            if (cacheOutputStream) {
-                return new OutputChoice(
-                    OutputChoice.OutputChoiceType.CACHED_SYS_ERR);
-            } else {
-                return new OutputChoice(OutputChoice.OutputChoiceType.SYS_ERR);
-            }
-        } else if (LOG_OUT.equalsIgnoreCase(logFilePath)) {
-            if (cacheOutputStream) {
-                return new OutputChoice(
-                    OutputChoice.OutputChoiceType.CACHED_SYS_OUT);
-            } else {
-                return new OutputChoice(OutputChoice.OutputChoiceType.SYS_OUT);
-            }
-        } else {
-            return new OutputChoice(OutputChoice.OutputChoiceType.FILE);
-        }
     }
 
 }
